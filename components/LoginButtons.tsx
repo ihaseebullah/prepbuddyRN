@@ -59,7 +59,7 @@ const LoginButtons = () => {
         }}
       >
         Using someone else's account credential may lead to temporary and
-        permanent account blockage
+        permanent account blockage.
       </Text>
     </View>
   );
