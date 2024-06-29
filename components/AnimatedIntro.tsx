@@ -15,29 +15,25 @@ import { ReText } from "react-native-redash";
 
 const content = [
   {
-    title: "Prep Buddy ",
-    bg: Colors.input,
-    fontColor: Colors.pink,
+    title: "Prep Buddy",
+    bg: "#050C9C",
+    fontColor: "#A7E6FF",
+  },
+
+  {
+    title: "Let's Learn.",
+    bg: "#A7E6FF",
+    fontColor: "#543310",
   },
   {
-    title: "Let's Learn. ",
-    bg: Colors.lime,
-    fontColor: Colors.pink,
+    title: "Let's Improve.",
+    bg: "#3ABEF9",
+    fontColor: "#26355D",
   },
   {
-    title: "Let's Improve. ",
-    bg: Colors.brown,
-    fontColor: Colors.sky,
-  },
-  {
-    title: "Let's discover. ",
-    bg: Colors.orange,
-    fontColor: Colors.blue,
-  },
-  {
-    title: "Let's go. ",
-    bg: Colors.teal,
-    fontColor: Colors.yellow,
+    title: "Let's go.",
+    bg: "#9DDE8B",
+    fontColor: "#006769",
   },
 ];
 
@@ -190,12 +186,14 @@ const AnimatedIntro = () => {
     <Animated.View style={[styles.wrapper, style1]}>
       <Animated.View style={[styles.content]}>
         <Animated.View style={[styles.ball, ballStyle]} />
-        <Animated.View style={[styles.mask, mask]} />
+        <Animated.View
+          style={[styles.mask, mask, { justifyContent: "center" }]}
+        />
         <ReText
           onLayout={(e) => {
             labelWidth.value = e.nativeEvent.layout.width + 4;
           }}
-          style={[styles.title, textStyle]}
+          style={[styles.title, textStyle, { textAlign: "center" }]}
           text={text}
         />
       </Animated.View>
@@ -214,11 +212,10 @@ const styles = StyleSheet.create({
     height: 50,
   },
   ball: {
-    width: 50,
+    width: 1,
     zIndex: 10,
     height: 50,
     backgroundColor: "#000",
-    borderRadius: 26,
     position: "absolute",
     left: "0%",
   },
