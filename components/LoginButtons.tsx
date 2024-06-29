@@ -11,7 +11,7 @@ const LoginButtons = () => {
   const { bottom } = useSafeAreaInsets();
   return (
     <View style={[styles.container, { paddingBottom: bottom }]}>
-      <Text style={[styles.title]}>Welcome to prepbuddy</Text>
+      <Text style={[styles.title]}>Welcome to Study Scape</Text>
       <Link
         href={{ pathname: "login", params: { type: "login" } }}
         style={[defaultStyles.btn, styles.btn_dark]}

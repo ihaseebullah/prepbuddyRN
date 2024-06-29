@@ -15,7 +15,7 @@ import { ReText } from "react-native-redash";
 
 const content = [
   {
-    title: "Prep Buddy",
+    title: "Study Scape",
     bg: "#050C9C",
     fontColor: "#A7E6FF",
   },
