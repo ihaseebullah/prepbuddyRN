@@ -2,12 +2,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
+import { Alert, Platform, ToastAndroid } from "react-native";
 
 export type logins = {
   username: string;
   password: string;
 };
-
+export type signUp = {
+  username: string;
+  phone: string;
+  email: string;
+  dob: string;
+  fullName: string;
+  password: string;
+};
 export function useAuth() {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,14 +45,25 @@ export function useAuth() {
         setToken(token);
         setUser(user);
         setIsSignedIn(true);
+        ToastAndroid.showWithGravity(
+          "You are Logged in as " + user.username,
+          ToastAndroid.LONG,
+          ToastAndroid.SHORT
+        );
       }
     } catch (err: any) {
       setError(err.response ? err.response.data.message : err.message);
+      ToastAndroid.showWithGravity(
+        err.response ? err.response.data.message : err.message,
+        ToastAndroid.LONG,
+        ToastAndroid.SHORT
+      );
+      setIsLoading(false);
+      return { errorCode: 500 };
     } finally {
       setIsLoading(false);
     }
   }
-
   async function checkUserSignedIn() {
     setIsLoading(true);
     try {
@@ -80,5 +99,43 @@ export function useAuth() {
     }
   }
 
-  return { user, token, isLoading, error, isSignedIn, signIn, signOut };
+  async function signUp({
+    username,
+    password,
+    dob,
+    email,
+    fullName,
+    phone,
+  }: signUp) {
+    try {
+      const response = await axios.post(
+        "http://192.168.61.204:3000/api/signup/",
+        {
+          username,
+          password,
+          dob,
+          email,
+          fullName,
+          phone,
+        },
+        { headers }
+      );
+      if (response.status === 200) {
+        setIsSignedIn(true);
+        setUser(response.data.newUser);
+        Alert.alert("Success: " + fullName + " signed up successfully");
+      }
+    } catch (err: any) {
+      setError(err.response ? err.response.data.error : err.message);
+      Platform.OS === "android"
+        ? ToastAndroid.show(err.response.data.error, ToastAndroid.LONG)
+        : Alert.alert("Error: " + err.response.data.error);
+      console.error(
+        "Failed to sign up",
+        err.response ? err.response.data.error : err.message
+      );
+    }
+  }
+
+  return { user, token, isLoading, error, isSignedIn, signIn, signOut, signUp };
 }
