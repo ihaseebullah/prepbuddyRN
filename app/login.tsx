@@ -5,14 +5,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { defaultStyles } from "@/constants/Styles";
+import { useAuth } from "@/hooks/useAuth";
 
 const login = () => {
   const { type } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
+  const { isSignedIn, signOut } = useAuth();
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   return (
     <View style={{ paddingTop: top }}>
+      <Text>{isSignedIn ? "You are in" : "Fuck off"}</Text>
+      <TouchableOpacity onPress={signOut}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
       <View
         style={{
           justifyContent: "center",
