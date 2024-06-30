@@ -18,7 +18,7 @@ export type signUp = {
 };
 export function useAuth() {
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -107,9 +107,10 @@ export function useAuth() {
     fullName,
     phone,
   }: signUp) {
+    setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.61.204:3000/api/signup/",
+        "http://192.168.99.204:3000/api/signup/",
         {
           username,
           password,
@@ -124,6 +125,7 @@ export function useAuth() {
         setIsSignedIn(true);
         setUser(response.data.newUser);
         Alert.alert("Success: " + fullName + " signed up successfully");
+        setIsLoading(false);
       }
     } catch (err: any) {
       setError(err.response ? err.response.data.error : err.message);
@@ -134,6 +136,9 @@ export function useAuth() {
         "Failed to sign up",
         err.response ? err.response.data.error : err.message
       );
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   }
 
