@@ -13,7 +13,7 @@ const LoginButtons = () => {
     <View style={[styles.container, { paddingBottom: bottom }]}>
       <Text style={[styles.title]}>Welcome to Study Scape</Text>
       <Link
-        href={{ pathname: "login", params: { type: "login" } }}
+        href={{ pathname: "signin", params: { type: "login" } }}
         style={[defaultStyles.btn, styles.btn_dark]}
         asChild
       >
@@ -32,7 +32,7 @@ const LoginButtons = () => {
         </TouchableOpacity>
       </Link>
       <Link
-        href={{ pathname: "login", params: { type: "create_account" } }}
+        href={{ pathname: "signup", params: { type: "create_account" } }}
         style={[defaultStyles.btn, styles.btn_light]}
         asChild
       >

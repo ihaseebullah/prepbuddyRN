@@ -5,6 +5,8 @@ import {
   StyleSheet,
   Button,
   ToastAndroid,
+  ActivityIndicator,
+  useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -15,6 +17,7 @@ import { defaultStyles } from "@/constants/Styles";
 import { useAuth } from "@/hooks/useAuth";
 import { ANDROID } from "nativewind/dist/utils/selector";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Colors from "@/constants/Colors";
 
 const login = () => {
   const { type } = useLocalSearchParams();
@@ -22,10 +25,11 @@ const login = () => {
   const { isSignedIn, signOut } = useAuth();
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const { height } = useWindowDimensions();
   const [loginAttempts, setLoginAttempts] = useState<number>(0);
-  const { signIn, error } = useAuth();
+  const { signIn, error, isLoading } = useAuth();
   const singInUser = async () => {
-    if (username && password) {
+    if (username != "" && password != "") {
       const e = await signIn({ username, password });
       if (e?.errorCode === 500) {
         setLoginAttempts(loginAttempts + 1);
@@ -33,6 +37,8 @@ const login = () => {
           const attempts = parseInt(value, 10) || 0;
           AsyncStorage.setItem("loginAttempts", (attempts + 1).toString());
         });
+        setUserName("");
+        setPassword("");
       }
     } else {
       ToastAndroid.show(
@@ -42,7 +48,6 @@ const login = () => {
     }
   };
   useEffect(() => {
-    console.log(loginAttempts);
     AsyncStorage.getItem("loginAttempts").then((value: any) => {
       setLoginAttempts(parseInt(value));
     });
@@ -57,43 +62,63 @@ const login = () => {
   }, [loginAttempts]);
   return (
     <View style={{ paddingTop: top }}>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          paddingTop: 50,
-        }}
-      >
-        <Image
-          source={require("@/assets/images/logo.png")}
-          style={{ height: 200, width: 200 }}
-        />
-      </View>
-      <View>
-        <Text style={[styles.title]}>Login</Text>
-        <TextInput
-          onChangeText={setUserName}
-          placeholder="Enter your username"
-          style={[styles.inputField]}
-        />
-        <TextInput
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          style={[styles.inputField]}
-        />
-        <TouchableOpacity
-          disabled={loginAttempts > 2 ? true : false}
-          style={[
-            defaultStyles.btn,
-            { margin: 10, backgroundColor: "#00afec" },
-          ]}
-          onPress={singInUser}
-        >
-          <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
-            {loginAttempts > 2 ? "You are locked out!" : "Login"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {isLoading ? (
+        <View style={{ flex: 1, marginTop: height / 2,backgroundColor:Colors.greyLight }}>
+          <ActivityIndicator size={"large"} />
+        </View>
+      ) : (
+        <>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              paddingTop: 50,
+            }}
+          >
+            <Image
+              source={require("@/assets/images/logo.png")}
+              style={{ height: 200, width: 200 }}
+            />
+          </View>
+          <View>
+            <Text style={[styles.title]}>Login</Text>
+            <Text
+              style={{
+                color: Colors.grey,
+                fontSize: 15,
+                paddingHorizontal: 10,
+                fontWeight: "600",
+              }}
+            >
+              {loginAttempts > 2
+                ? "Try back in 10 seconds"
+                : "You've got a maximum of 3 login attempts"}
+            </Text>
+            <TextInput
+              onChangeText={setUserName}
+              placeholder="Enter your username"
+              style={[styles.inputField]}
+            />
+            <TextInput
+              onChangeText={setPassword}
+              placeholder="Enter your password"
+              style={[styles.inputField]}
+            />
+            <TouchableOpacity
+              disabled={loginAttempts > 2 ? true : false}
+              style={[
+                defaultStyles.btn,
+                { margin: 10, backgroundColor: "#00afec" },
+              ]}
+              onPress={singInUser}
+            >
+              <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
+                {loginAttempts > 2 ? "You are locked out!" : "Login"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 };
