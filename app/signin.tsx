@@ -22,12 +22,11 @@ import Colors from "@/constants/Colors";
 const login = () => {
   const { type } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
-  const { isSignedIn, signOut } = useAuth();
+  const { isSignedIn, signOut, signIn, error, isLoading } = useAuth();
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const { height } = useWindowDimensions();
   const [loginAttempts, setLoginAttempts] = useState<number>(0);
-  const { signIn, error, isLoading } = useAuth();
   const singInUser = async () => {
     if (username != "" && password != "") {
       const e = await signIn({ username, password });
@@ -62,8 +61,17 @@ const login = () => {
   }, [loginAttempts]);
   return (
     <View style={{ paddingTop: top }}>
+      <TouchableOpacity onPress={signOut}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
       {isLoading ? (
-        <View style={{ flex: 1, marginTop: height / 2,backgroundColor:Colors.greyLight }}>
+        <View
+          style={{
+            flex: 1,
+            marginTop: height / 2,
+            backgroundColor: Colors.greyLight,
+          }}
+        >
           <ActivityIndicator size={"large"} />
         </View>
       ) : (
