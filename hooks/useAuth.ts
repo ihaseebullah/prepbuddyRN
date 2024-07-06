@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { Alert, Platform, ToastAndroid } from "react-native";
 import { useRouter } from "expo-router";
-
 export type logins = {
   username: string;
   password: string;
@@ -33,11 +32,10 @@ export function useAuth() {
   }, []);
 
   async function signIn({ username, password }: logins) {
-    const Router = useRouter();
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.18.41:3000/api/auth/login",
+        `http://192.168.0.107:3000/api/auth/login`,
         { username, password },
         { headers }
       );
@@ -47,7 +45,6 @@ export function useAuth() {
         setToken(token);
         setUser(user);
         setIsSignedIn(true);
-        Router.replace("/(auth)/index");
         ToastAndroid.showWithGravity(
           "You are Logged in as " + user.username,
           ToastAndroid.LONG,
@@ -93,11 +90,9 @@ export function useAuth() {
   }
 
   async function signOut() {
-    const Router = useRouter();
     try {
       await AsyncStorage.removeItem("token");
       setIsSignedIn(false);
-      Router.replace("/");
     } catch (err) {
       setError("Failed to sign out");
       console.error("Failed to sign out", err);
@@ -115,7 +110,7 @@ export function useAuth() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.18.41:3000/api/signup/",
+        `http://192.168.0.107:3000/api/signup`,
         {
           username,
           password,

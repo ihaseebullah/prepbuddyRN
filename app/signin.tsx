@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
@@ -27,6 +27,7 @@ const login = () => {
   const [password, setPassword] = useState("");
   const { height } = useWindowDimensions();
   const [loginAttempts, setLoginAttempts] = useState<number>(0);
+  const Router = useRouter();
   const singInUser = async () => {
     if (username != "" && password != "") {
       const e = await signIn({ username, password });
@@ -38,6 +39,8 @@ const login = () => {
         });
         setUserName("");
         setPassword("");
+      } else {
+        Router.replace('/(auth)/homePage')
       }
     } else {
       ToastAndroid.show(

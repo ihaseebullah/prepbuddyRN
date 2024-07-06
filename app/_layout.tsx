@@ -12,12 +12,13 @@ export default function RootLayout() {
     if (inAuthGroup && !isSignedIn) {
       Router.replace("/");
     } else if (!inAuthGroup && isSignedIn) {
-      Router.replace("/(auth)/(drawer)/(chat)/newChat");
+      Router.replace("/(auth)/homePage");
     }
   }, [isSignedIn]);
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="signin" options={{ headerShown: false }} />
       <Stack.Screen name="signup" options={{ headerShown: false }} />
     </Stack>
