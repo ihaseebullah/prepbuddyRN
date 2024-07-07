@@ -8,7 +8,7 @@ export default function RootLayout() {
   const Router = useRouter();
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
-    console.log(inAuthGroup + " isSignedIn: " + isSignedIn);
+    console.log(inAuthGroup + " isSignedIn : " + isSignedIn);
     if (inAuthGroup && !isSignedIn) {
       Router.replace("/");
     } else if (!inAuthGroup && isSignedIn) {
